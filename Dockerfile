@@ -1,6 +1,6 @@
 FROM unilynx/phusion-baseimage-1804
 
-MAINTAINER BeRepublic
+MAINTAINER franmorante
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV COMPOSER_DISABLE_XDEBUG_WARN 1
