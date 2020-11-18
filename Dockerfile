@@ -58,7 +58,7 @@ RUN echo "opcache.validate_timestamps = 0" \
 RUN echo "opcache.validate_timestamps = 0" \
          >> /etc/php/7.3/cli/php.ini
 
- RUN echo "realpath_cache_ttl = 600" \
+RUN echo "realpath_cache_ttl = 600" \
          >> /etc/php/7.3/fpm/php.ini
 
 RUN echo "realpath_cache_ttl = 600" \
@@ -96,8 +96,8 @@ RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.3/fpm/php.ini
 
 RUN mkdir /log
 RUN mkdir -p     /var/www
-ADD default   	 /etc/nginx/conf.d/default.conf
-#ADD default   	 /etc/nginx/sites-available/default.conf
+#ADD default   	 /etc/nginx/conf.d/default.conf
+ADD default   	 /etc/nginx/sites-available/default.conf
 RUN mkdir        /etc/service/nginx
 ADD nginx.sh  	 /etc/service/nginx/run
 RUN chmod +x     /etc/service/nginx/run
