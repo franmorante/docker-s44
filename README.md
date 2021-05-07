@@ -1,1 +1,1 @@
-ubuntu18.04_php7.3_nginx_sf4
+ubuntu18.04_php7.4_nginx_sf5.2
