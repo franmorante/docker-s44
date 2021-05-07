@@ -1,6 +1,6 @@
 FROM unilynx/phusion-baseimage-1804
 
-MAINTAINER franmorante
+MAINTAINER BeRepublic
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV COMPOSER_DISABLE_XDEBUG_WARN 1
@@ -32,40 +32,39 @@ RUN apt-get update
 RUN apt-get full-upgrade -y
 
 # Install php
-RUN apt-get install -y php7.3
+RUN apt-get install -y php7.4
 
 # Install extension php
-RUN apt-get install -y php7.3-cli php7.3-fpm php7.3-curl php7.3-gd php7.3-mbstring php7.3-zip php7.3-mysql php7.3-xml php7.3-json php7.3-intl php7.3-bcmath
+RUN apt-get install -y php7.4-cli php7.4-fpm php7.4-curl php7.4-gd php7.4-mbstring php7.4-zip php7.4-mysql php7.4-xml php7.4-json php7.4-intl php7.4-bcmath
 
-RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.3/fpm/php.ini
-RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.3/cli/php.ini
-
-RUN echo "opcache.memory_consumption = 256" \
-         >> /etc/php/7.3/fpm/php.ini
+RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.4/fpm/php.ini
+RUN sed -i "s/;date.timezone =.*/date.timezone = UTC/" /etc/php/7.4/cli/php.ini
 
 RUN echo "opcache.memory_consumption = 256" \
-         >> /etc/php/7.3/cli/php.ini
+         >> /etc/php/7.4/fpm/php.ini
+
+RUN echo "opcache.memory_consumption = 256" \
+         >> /etc/php/7.4/cli/php.ini
 
 RUN echo "opcache.max_accelerated_files = 20000" \
-         >> /etc/php/7.3/fpm/php.ini
+         >> /etc/php/7.4/fpm/php.ini
 
 RUN echo "opcache.max_accelerated_files = 20000" \
-         >> /etc/php/7.3/cli/php.ini
+         >> /etc/php/7.4/cli/php.ini
 
 RUN echo "opcache.validate_timestamps = 0" \
-         >> /etc/php/7.3/fpm/php.ini
+         >> /etc/php/7.4/fpm/php.ini
 
 RUN echo "opcache.validate_timestamps = 0" \
-         >> /etc/php/7.3/cli/php.ini
+         >> /etc/php/7.4/cli/php.ini
+
+ RUN echo "realpath_cache_ttl = 600" \
+         >> /etc/php/7.4/fpm/php.ini
 
 RUN echo "realpath_cache_ttl = 600" \
-         >> /etc/php/7.3/fpm/php.ini
+         >> /etc/php/7.4/cli/php.ini
 
-RUN echo "realpath_cache_ttl = 600" \
-         >> /etc/php/7.3/cli/php.ini
 
-RUN echo "memory_limit = 256M" \
-         >> /etc/php/7.3/cli/php.ini
 
 # Install nginx
 RUN cd /tmp/ && wget http://nginx.org/keys/nginx_signing.key
@@ -79,7 +78,7 @@ RUN nginx -v
 RUN apt-get install -y git
 
 # Install memcached
-RUN apt-get install -y php7.3-memcached memcached
+RUN apt-get install -y php7.4-memcached memcached
 
 # Cleanup
 RUN apt-get remove --purge -y python-software-properties && \
@@ -91,13 +90,13 @@ RUN apt-get remove --purge -y python-software-properties && \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN echo "daemon off;" >> /etc/nginx/nginx.conf
-RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.3/fpm/php-fpm.conf
-RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.3/fpm/php.ini
+RUN sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.4/fpm/php-fpm.conf
+RUN sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.4/fpm/php.ini
 
 RUN mkdir /log
 RUN mkdir -p     /var/www
-#ADD default   	 /etc/nginx/conf.d/default.conf
-ADD default   	 /etc/nginx/sites-available/default.conf
+ADD default   	 /etc/nginx/conf.d/default.conf
+#ADD default   	 /etc/nginx/sites-available/default.conf
 RUN mkdir        /etc/service/nginx
 ADD nginx.sh  	 /etc/service/nginx/run
 RUN chmod +x     /etc/service/nginx/run
@@ -110,7 +109,7 @@ RUN chmod +x     /etc/service/memcached/run
 #RUN mkdir        /etc/nginx/sites-enabled
 #RUN ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
 
-RUN service php7.3-fpm start
+RUN service php7.4-fpm start
 
 # Permission fix
 RUN usermod -u 1000 www-data
